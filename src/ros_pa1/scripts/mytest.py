@@ -2,29 +2,30 @@
 import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import Int32MultiArray
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 def callback(data):
-    rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(data))
+    rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(data[1]))
     
 
 def testlisten():
-    pub = rospy.Publisher('my_listen', PoseStamped, queue_size=10)
-    rospy.init_node('my_listen', anonymous=False)
+    #pub = rospy.Publisher('my_test', PoseStamped, queue_size=10)
+    rospy.init_node('my_test', anonymous=False)
     rate = rospy.Rate(10) # 10hz
 
-    home_pose = PoseStamped()
-    home_pose.header.frame_id = "odom"
+    #home_pose = PoseStamped()
+    #home_pose.header.frame_id = "odom"
 
-    home_pose.pose.position.x = 1.1
-    home_pose.pose.position.y = 1.1
-    home_pose.pose.position.z = 0
+    #home_pose.pose.position.x = 1.1
+    #home_pose.pose.position.y = 1.1
+    #home_pose.pose.position.z = 0
 
     
     while not rospy.is_shutdown():
-        
-        home_pose.header.stamp = rospy.Time.now()
-	rospy.Subscriber('base_scan', LaserScan, callback)
+        #home_pose.header.stamp = rospy.Time.now()
+	#rospy.Subscriber('base_scan', LaserScan, callback)
+	rospy.Subscriber('laserSections', String, callback)
 	rate.sleep()
 
 

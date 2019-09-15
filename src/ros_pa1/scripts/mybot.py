@@ -26,27 +26,56 @@ def callbackmove(data):
 
 def callbackstopmove(data):
     if data.twist.twist.linear.x != 0:
-	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+	pub.publish(Vector3(0,0,0),Vector3(0,0,0.1))
 	rospy.loginfo(rospy.get_caller_id() + 'Stop x %s', str(data.twist.twist.linear.x))
     else:
 	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+
+def callbacklaser(data):
+    global count
+    global tempstring
+    print(data.data)
+    tempstring2 = data.data
+    if tempstring != tempstring2:
+	count = count + 1
+    tempstring = tempstring2
+    laserdata = data.data
+    if str(data.data)[2] == 't' :
+	goalfind = False
+	#print("ttt")
+	pub.publish(Vector3(0.1,0,0),Vector3(0,0,0))
+	rospy.loginfo(rospy.get_caller_id() + 'go     :  %s' + str(count), data)
+    elif str(data.data)[3] == 't':
+	#print("ftt")
+	pub.publish(Vector3(0,0,0),Vector3(0,0,-0.9))
+	rospy.loginfo(rospy.get_caller_id() + 'right  :  %s', data)
+    elif str(data.data)[2] == 't' :
+	pub.publish(Vector3(0,0,0),Vector3(0,0,0.3))
+	rospy.loginfo(rospy.get_caller_id() + 'left   :  %s', data)
+    else:
+	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+	rospy.loginfo(rospy.get_caller_id() + 'reverse:  %s', data)
 
 
 def testbot():
     rospy.init_node('my_bot', anonymous=False)
     rate = rospy.Rate(10) # 10hz
-    pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
-
+    #pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
+    count = 0
     
     while not rospy.is_shutdown():
-	rospy.Subscriber('base_scan', LaserScan, callbackmove)
-	rate.sleep()
+	#rospy.Subscriber('base_scan', LaserScan, callbackmove)
+	rospy.Subscriber('laserSections', String, callbacklaser)
+	#rate.sleep()
 
 
 if __name__ == '__main__':
     try:
+	goalfind = True
+	laserdata = "fffff"
+        tempstring = "xxxxx"
 	pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
-	count = 1
+	count = 0
         testbot()
     except rospy.ROSInterruptException:
         pass

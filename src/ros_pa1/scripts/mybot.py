@@ -43,15 +43,8 @@ def callbacklaser(data):
     if str(data.data)[2] == 't' :
 	goalfind = False
 	#print("ttt")
-	pub.publish(Vector3(0.1,0,0),Vector3(0,0,0))
+	pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
 	rospy.loginfo(rospy.get_caller_id() + 'go     :  %s' + str(count), data)
-    elif str(data.data)[3] == 't':
-	#print("ftt")
-	pub.publish(Vector3(0,0,0),Vector3(0,0,-0.9))
-	rospy.loginfo(rospy.get_caller_id() + 'right  :  %s', data)
-    elif str(data.data)[2] == 't' :
-	pub.publish(Vector3(0,0,0),Vector3(0,0,0.3))
-	rospy.loginfo(rospy.get_caller_id() + 'left   :  %s', data)
     else:
 	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
 	rospy.loginfo(rospy.get_caller_id() + 'reverse:  %s', data)
@@ -66,7 +59,7 @@ def testbot():
     while not rospy.is_shutdown():
 	#rospy.Subscriber('base_scan', LaserScan, callbackmove)
 	rospy.Subscriber('laserSections', String, callbacklaser)
-	#rate.sleep()
+	rate.sleep()
 
 
 if __name__ == '__main__':
@@ -74,7 +67,7 @@ if __name__ == '__main__':
 	goalfind = True
 	laserdata = "fffff"
         tempstring = "xxxxx"
-	pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
+	pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 	count = 0
         testbot()
     except rospy.ROSInterruptException:

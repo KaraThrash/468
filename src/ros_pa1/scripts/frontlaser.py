@@ -8,7 +8,7 @@ from sensor_msgs.msg import LaserScan
 def callback(data):
     #print(CheckLaserSection(data.intensities[0:35]) + CheckLaserSection(data.intensities[36:70]) + CheckLaserSection(data.intensities[71:86]) + CheckLaserSection(data.intensities[87:123]) + CheckLaserSection(data.intensities[124:180]))
     #print(str(data.intensities))
-    callback2(data.intensities[180:360])
+    callback2(data.intensities[90:270])
     #pub.publish(CheckLaserSection(data.intensities[0:35]) + CheckLaserSection(data.intensities[36:70]) + CheckLaserSection(data.intensities[71:86]) + CheckLaserSection(data.intensities[87:123]) + CheckLaserSection(data.intensities[124:180]))
     
 def callback2(data):
@@ -25,7 +25,7 @@ def callback2(data):
 def CheckLaserSection(laserdata):
     tempsting = "t"
     for i in laserdata:
-      if int(i) > 0:
+      if int(i) == 1:
 	tempsting = "f"
     return tempsting
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     try:
 	count = 0
         tempstring = "xxxxx"
-	pub = rospy.Publisher('laserSections', String, queue_size=10)
+	pub = rospy.Publisher('laserSections', String, queue_size=1)
 	robotpos = (0,0,0)
         pathfindstart()
     except rospy.ROSInterruptException:

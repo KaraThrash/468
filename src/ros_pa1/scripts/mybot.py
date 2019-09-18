@@ -5,6 +5,9 @@ from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist,Vector3
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
+
+move = True
+turn = False
 def callback(data):
     tempstring = "["
     for i in data.intensities:
@@ -14,7 +17,7 @@ def callback(data):
 	     tempstring = tempstring + "x"
     tempstring = tempstring + "]"
     rospy.loginfo(rospy.get_caller_id() + 'test heard %s', tempstring)
-    
+
 def callbackmove(data):
     if data.intensities[180] == 0.0:
 	pub.publish(Vector3(1,0,0),Vector3(0,0,0))
@@ -31,7 +34,7 @@ def callbackstopmove(data):
     else:
 	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
 
-def callbacklaser(data):
+def callbacklaser2(data):
     global count
     global tempstring
     print(data.data)
@@ -49,16 +52,32 @@ def callbacklaser(data):
 	pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
 	rospy.loginfo(rospy.get_caller_id() + 'reverse:  %s', data)
 
+def callbacklaser(data):
+    global turn
+    if str(data.data)[0] == 't':
+        turn = False
+        pub.publish(Vector3(0.1,0,0),Vector3(0,0,0))
+        rospy.loginfo(rospy.get_caller_id() + 'go     :  %s' + str(count), data)
+    else:
+        turn = True
+        pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+        rospy.loginfo(rospy.get_caller_id() + 'reverse:  %s', data)
 
 def testbot():
     rospy.init_node('my_bot', anonymous=False)
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(1) # 10hz
     #pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
     count = 0
-    
+    global move
+    global turn
+
     while not rospy.is_shutdown():
 	#rospy.Subscriber('base_scan', LaserScan, callbackmove)
 	rospy.Subscriber('laserSections', String, callbacklaser)
+    if turn == True:
+        pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+    else:
+        pub.publish(Vector3(1.5,0,0),Vector3(0,0,0))
 	rate.sleep()
 
 

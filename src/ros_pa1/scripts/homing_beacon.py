@@ -10,11 +10,11 @@ def talker():
     home_pose = PoseStamped()
     home_pose.header.frame_id = "odom"
 
-    home_pose.pose.position.x = 4.2
-    home_pose.pose.position.y = 8.8
+    home_pose.pose.position.x = -4.2
+    home_pose.pose.position.y = -8.8
     home_pose.pose.position.z = 0
 
-    
+
     while not rospy.is_shutdown():
         home_pose.header.stamp = rospy.Time.now()
         pub.publish(home_pose)

@@ -9,6 +9,7 @@ pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 goalposition = Vector3(0,0,0)
 goalset = False
 wallfollow = False
+wallfollowleft = False
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + 'bot x - signal x %s', str(robotpos[0] - data.pose.position.x))
 
@@ -30,25 +31,48 @@ def CheckLaserSection(laserdata):
     rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(laserdata.intensities[180]))
     if wallfollow == True:
         WallFollow(laserdata)
+    elif wallfollowleft == True:
+        WallFollowLeft(laserdata)
     else:
         GoalSeek(laserdata)
 
 def WallFollow(laserdata):
     global wallfollow
+    global wallfollowleft
+    direction = 0.5
     rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(wallfollow))
-    if laserdata.intensities[160] > 0:
-        pub.publish(Vector3(0,0,0),Vector3(0,0,0.5)) #rotate left
-    elif laserdata.intensities[180] < 1 and  laserdata.intensities[195] < 1:
-        pub.publish(Vector3(1.0,0,0),Vector3(0,0,0))
-
-    elif laserdata.intensities[30] < 1:
+    if laserdata.intensities[150] > 0:
+        pub.publish(Vector3(0,0,0),Vector3(0,0,direction)) #rotate left
+    elif laserdata.intensities[190] < 1 and  laserdata.intensities[180] < 1:
+        wallfollowleft = True
         wallfollow = False
+    elif laserdata.intensities[180] > 0.0 :
+        wallfollow = False
+        wallfollowleft = False#pub.publish(Vector3(1.0,0,0),Vector3(0,0,0))
+    elif laserdata.intensities[30] < 1:
+        print("blank")
+        #wallfollow = False
     else:
         pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
 
+def WallFollowLeft(laserdata):
+    global wallfollowleft
+    global wallfollow
+    rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(wallfollow))
+    if laserdata.intensities[190] > 0:
+        pub.publish(Vector3(0,0,0),Vector3(0,0,-0.5)) #rotate left
+    elif laserdata.intensities[180] > 0.0 :
+        wallfollow = False
+        wallfollowleft = False#pub.publish(Vector3(1.0,0,0),Vector3(0,0,0))
+    elif laserdata.intensities[30] < 1:
+        print("blank")
+        #wallfollow = False
+    else:
+        pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
 
 def GoalSeek(laserdata):
     global wallfollow
+    global wallfollowleft
     rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(laserdata.intensities[180]))
     if laserdata.intensities[160] < 1 and laserdata.intensities[205] < 1 and laserdata.intensities[180] < 1:
         pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
@@ -62,6 +86,7 @@ def SetGoalPosition(goaldata):
     goalposition = (goaldata.pose.position.x,goaldata.pose.position.y,0)
     global goalset
     global wallfollow
+    global wallfollowleft
     if goalset == False:
         goalset = True
         print(str(goaldata))

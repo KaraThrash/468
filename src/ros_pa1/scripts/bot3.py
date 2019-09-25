@@ -11,7 +11,8 @@ goalset = False
 wallfollow = False
 wallfollowleft = False
 forwardcone = [0,0,0,0,0]
-
+forwardspeed = 0.0
+rotspeed = 0.0
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + 'bot x - signal x %s', str(robotpos[0] - data.pose.position.x))
 
@@ -31,69 +32,90 @@ def callbackmove(data):
 def CheckLaserSection(laserdata):
     global wallfollow
     global forwardcone
-    forwardcone[0] = laserdata.ranges[5] + laserdata.ranges[25] + laserdata.ranges[50]
-    forwardcone[1] = laserdata.ranges[90] + laserdata.ranges[130] + laserdata.ranges[55]
-    forwardcone[2] = laserdata.ranges[155] + laserdata.ranges[180] + laserdata.ranges[200]
-    forwardcone[3] = laserdata.ranges[205] + laserdata.ranges[230] + laserdata.ranges[250]
-    forwardcone[4] = laserdata.ranges[255] + laserdata.ranges[300] + laserdata.ranges[330]
+    global forwardspeed
+    global rotspeed
+    forwardcone[0] = (laserdata.ranges[1] + laserdata.ranges[35] + laserdata.ranges[70]) / 3
+    forwardcone[1] = (laserdata.ranges[75] + laserdata.ranges[95] + laserdata.ranges[130] ) / 3
+    forwardcone[2] = (laserdata.ranges[135] +  laserdata.ranges[175] + laserdata.ranges[180] +  laserdata.ranges[185] + laserdata.ranges[225]) / 5
+    forwardcone[3] = (laserdata.ranges[226] + laserdata.ranges[250] + laserdata.ranges[320]) / 3
+    forwardcone[4] = (laserdata.ranges[321] + laserdata.ranges[345] + laserdata.ranges[360]) / 3
     # forwardcone[0] = int(forwardcone[0])
     # forwardcone[1] = int(forwardcone[1])
     # forwardcone[2] = int(forwardcone[2])
     # forwardcone[3] = int(forwardcone[3])
     # forwardcone[4] = int(forwardcone[4])
-    rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(laserdata.intensities[180]))
-    if wallfollow == True:
-        WallFollow(laserdata)
-    elif wallfollowleft == True:
-        WallFollowLeft(laserdata)
+    if forwardcone[2] > 2.9:
+        forwardspeed = 1.0
+        rotspeed = 0
     else:
-        GoalSeek(laserdata)
+        forwardspeed = 0
+        rotspeed = 0.5
+        if forwardspeed > 0:
+            forwardspeed = 0
+            rotspeed = 0.5
+            # if wallfollowleft == False:
+            #     wallfollow = True
+
+        # if wallfollowleft == False:
+            # wallfollow = True
+        forwardspeed = 0
+    # rospy.loginfo(rospy.get_caller_id() + 'CheckLaserSection %s', str(laserdata.ranges[180]))
+    # if wallfollow == True:
+    #     WallFollow(laserdata)
+    # elif wallfollowleft == True:
+    #     WallFollowLeft(laserdata)
+    # else:
+    #     GoalSeek(laserdata)
+    rospy.loginfo(rospy.get_caller_id() + 'forward and rot speed:  %s', str(forwardspeed) + " : "+ str(rotspeed))
+    pub.publish(Vector3(forwardspeed,0,0),Vector3(0,0,rotspeed))
 
 def WallFollow(laserdata):
     global wallfollow
     global wallfollowleft
     global forwardcone
-    direction = 0.5
-    rospy.loginfo(rospy.get_caller_id() + 'WallFollow %s', str(wallfollow))
-    if laserdata.ranges[250] > 1 and laserdata.ranges[255] > laserdata.ranges[250]:
-        pub.publish(Vector3(0,0,0),Vector3(0,0,direction)) #rotate left
-    elif laserdata.ranges[180] > 1 and laserdata.ranges[195] > 1 and laserdata.ranges[160] > 1:
-        pub.publish(Vector3(0.2,0,0),Vector3(0,0,0))
-        wallfollowleft = False
+    global forwardspeed
+    global rotspeed
+    rotspeed = 0.5
+    # rospy.loginfo(rospy.get_caller_id() + 'WallFollow %s', str(wallfollow))
+    if forwardcone[3] > 2:
         wallfollow = False
-    elif laserdata.ranges[350] > 2 and laserdata.ranges[300] > 2 and laserdata.ranges[180] > 1:
-        pub.publish(Vector3(0.2,0,0),Vector3(0,0,0.3))
-        wallfollowleft = False
-        wallfollow = False
-    elif laserdata.ranges[350] < 2 and laserdata.ranges[300] < 2 and laserdata.ranges[190] < 2:
-        wallfollowleft = True
+    elif forwardcone[4] > forwardcone[3] and forwardcone[4] > 1:
+        rotspeed = -0.2
     else:
-        pub.publish(Vector3(0,0,0),Vector3(0,0,-0.3))
+        wallfollowleft = True
+        wallfollow = False
 
 def WallFollowLeft(laserdata):
     global wallfollowleft
     global wallfollow
     global forwardcone
-    rospy.loginfo(rospy.get_caller_id() + 'Left %s', str(wallfollow))
-    if laserdata.ranges[180] > 2 and laserdata.ranges[220] > 2 and laserdata.ranges[150] > 2:
-            wallfollow = False
-            wallfollowleft = False
+    global forwardspeed
+    global rotspeed
+    # rospy.loginfo(rospy.get_caller_id() + 'Left %s', str(wallfollow))
+    if forwardcone[2] > 2:
+        wallfollow = False
+        wallfollowleft = False
+        rotspeed = 0
     else:
-        pub.publish(Vector3(0,0,0),Vector3(0,0,-0.5))
+        rotspeed = 0.3
+        #pub.publish(Vector3(0,0,0),Vector3(0,0,-0.5))
 
 def GoalSeek(laserdata):
     global wallfollow
     global wallfollowleft
     global forwardcone
-    rospy.loginfo(rospy.get_caller_id() + 'test heard %s', str(laserdata.intensities[180]))
-    if laserdata.ranges[180] > 2 and laserdata.ranges[200] > 2 and laserdata.ranges[160] > 2:
-        pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
-    elif laserdata.ranges[180] > 1 and laserdata.ranges[200] > 1 and laserdata.ranges[160] > 1:
-        pub.publish(Vector3(0.2,0,0),Vector3(0,0,0))
-    else:
-        wallfollowleft = True
-        wallfollow = True
-        #pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
+    global forwardspeed
+    global rotspeed
+    # rospy.loginfo(rospy.get_caller_id() + 'goalseek %s', str(laserdata.intensities[180]))
+    rotspeed = 0
+    # if forwardcone[2] > 3:
+    #     pub.publish(Vector3(1.1,0,0),Vector3(0,0,0))
+    # elif forwardcone[2] < forwardcone[4]:
+    #     wallfollowleft = False
+    #     wallfollow = True
+    # else:
+    #     pub.publish(Vector3(0,0,0),Vector3(0,0,0.2))
+    #     #pub.publish(Vector3(0,0,0),Vector3(0,0,0.5))
 
 
 def SetGoalPosition(goaldata):
@@ -103,6 +125,8 @@ def SetGoalPosition(goaldata):
     global wallfollow
     global wallfollowleft
     global forwardcone
+    global forwardspeed
+    global rotspeed
     if goalset == False:
         goalset = True
         print(str(goaldata))
@@ -112,13 +136,16 @@ def SetGoalPosition(goaldata):
 
 def toast():
     rospy.init_node('my_toaster', anonymous=False)
-    rate = rospy.Rate(1) # 10hz
+    rate = rospy.Rate(10) # 10hz
     global pub
     global goalposition
     global goalset
     global forwardcone
+    global forwardspeed
+    global rotspeed
     goalposition = Vector3(0,0,0)
     while not rospy.is_shutdown():
+        # negative rotation is right
         if goalset == False:
             #get the goal position, which doesnt change so it only needs to be checked once
             rospy.Subscriber('homing_signal', PoseStamped, SetGoalPosition)
@@ -126,7 +153,7 @@ def toast():
             rospy.Subscriber('base_scan', LaserScan, CheckLaserSection)
         print("---")
         #rospy.Subscriber('base_scan', LaserScan, CheckLaserSection)
-
+	    #rospy.Subscriber('odom', Odometry, callbackmove)
         rate.sleep()
 
 

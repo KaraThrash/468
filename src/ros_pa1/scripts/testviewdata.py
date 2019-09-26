@@ -51,18 +51,19 @@ def testlisten():
     global goalposition
     global botposition
     global count
-
+    pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
     while not rospy.is_shutdown():
         #home_pose.header.stamp = rospy.Time.now()
-	#rospy.Subscriber('base_scan', LaserScan, callback)
-        if count == 0:
-            rospy.Subscriber('homing_signal', PoseStamped, SetGoalPosition)
-        if count == 1:
-            rospy.Subscriber('odom', Odometry, findline)
-        else:
-            rospy.Subscriber('odom', Odometry, callback)
-
-	rate.sleep()
+	       # rospy.Subscriber('base_scan', LaserScan, lasercallback)
+        rospy.Subscriber('base_pose_ground_truth', Odometry, lasercallback)
+        # pub.publish(Vector3(0.1,0,0),Vector3(0,0,0.1))
+        # if count == 0:
+        #     rospy.Subscriber('homing_signal', PoseStamped, SetGoalPosition)
+        # if count == 1:
+        #     rospy.Subscriber('odom', Odometry, findline)
+        # else:
+        #     rospy.Subscriber('odom', Odometry, callback)
+        rate.sleep()
 
 
 if __name__ == '__main__':

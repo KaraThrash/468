@@ -329,6 +329,12 @@ ros_pa1_BINARY_DIR:STATIC=/home/apollo/catkin_ws/build/ros_pa1
 //Value Computed by CMake
 ros_pa1_SOURCE_DIR:STATIC=/home/apollo/catkin_ws/src/ros_pa1
 
+//Value Computed by CMake
+ros_pa2_BINARY_DIR:STATIC=/home/apollo/catkin_ws/build/ros_pa2
+
+//Value Computed by CMake
+ros_pa2_SOURCE_DIR:STATIC=/home/apollo/catkin_ws/src/ros_pa2
+
 //The directory containing a CMake configuration file for rosconsole.
 rosconsole_DIR:PATH=/opt/ros/kinetic/share/rosconsole/cmake
 
@@ -458,7 +464,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

@@ -17,11 +17,15 @@ set(CMAKE_MAKEFILE_DEPENDS
   "catkin_generated/order_packages.cmake"
   "ros_pa1/catkin_generated/ordered_paths.cmake"
   "ros_pa1/catkin_generated/package.cmake"
+  "ros_pa2/catkin_generated/ordered_paths.cmake"
+  "ros_pa2/catkin_generated/package.cmake"
   "/home/apollo/catkin_ws/src/CMakeLists.txt"
   "/home/apollo/catkin_ws/src/beginner_tutorials/CMakeLists.txt"
   "/home/apollo/catkin_ws/src/beginner_tutorials/package.xml"
   "/home/apollo/catkin_ws/src/ros_pa1/CMakeLists.txt"
   "/home/apollo/catkin_ws/src/ros_pa1/package.xml"
+  "/home/apollo/catkin_ws/src/ros_pa2/CMakeLists.txt"
+  "/home/apollo/catkin_ws/src/ros_pa2/package.xml"
   "/opt/ros/kinetic/share/catkin/cmake/../package.xml"
   "/opt/ros/kinetic/share/catkin/cmake/all.cmake"
   "/opt/ros/kinetic/share/catkin/cmake/assert.cmake"
@@ -179,6 +183,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "gtest/gtest/CMakeFiles/CMakeDirectoryInformation.cmake"
   "beginner_tutorials/CMakeFiles/CMakeDirectoryInformation.cmake"
   "ros_pa1/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "ros_pa2/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:

@@ -1,0 +1,8 @@
+prefix=/home/apollo/catkin_ws/devel
+
+Name: ros_pa2
+Description: Description of ros_pa2
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/apollo/catkin_ws/devel/lib 
+Requires: 

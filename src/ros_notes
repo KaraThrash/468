@@ -1,0 +1,21 @@
+roslaunch ros_pa1 sim_rviz.launch
+roslaunch ros_pa1 pa1.launch
+roscore
+
+rosrun ros_pa1 pathfind.py
+roslaunch ros_pa2 pa2.launch
+rosrun ros_pa2 rottest.py
+quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
+    euler = transform.euler_from_quaternion(quaternion)
+    print(euler)
+
+
+TRY THIS: http://wiki.ros.org/tf2/Tutorials/Quaternions
+Toggle line numbers
+   1 from tf.transformations import *
+   2 
+   3 q_orig = quaternion_from_euler(0, 0, 0)
+   4 q_rot = quaternion_from_euler(pi, 0, 0)
+   5 q_new = quaternion_multiply(q_rot, q_orig)
+   6 print q_new
+

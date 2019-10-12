@@ -128,6 +128,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/apollo/catkin_ws/build/gtest/cmake_install.cmake")
   include("/home/apollo/catkin_ws/build/beginner_tutorials/cmake_install.cmake")
   include("/home/apollo/catkin_ws/build/ros_pa1/cmake_install.cmake")
+  include("/home/apollo/catkin_ws/build/ros_pa2/cmake_install.cmake")
 
 endif()
 

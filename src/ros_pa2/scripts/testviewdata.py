@@ -54,8 +54,8 @@ def testlisten():
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
     while not rospy.is_shutdown():
         #home_pose.header.stamp = rospy.Time.now()
-	       # rospy.Subscriber('base_scan', LaserScan, lasercallback)
-        rospy.Subscriber('base_pose_ground_truth', Odometry, lasercallback)
+        rospy.Subscriber('base_scan', LaserScan, lasercallback)
+        # rospy.Subscriber('base_pose_ground_truth', Odometry, lasercallback)
         # pub.publish(Vector3(0.1,0,0),Vector3(0,0,0.1))
         # if count == 0:
         #     rospy.Subscriber('homing_signal', PoseStamped, SetGoalPosition)

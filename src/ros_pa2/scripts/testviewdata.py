@@ -8,12 +8,42 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist,Vector3
 import tf.transformations as transform
-
+forwardcone = [0,0,0,0,0,0,0,0,0,0,0,0,0]
 goalposition = Vector3(0,0,0)
 botposition = Vector3(0,0,0)
 count = 0
-def lasercallback(data):
-        rospy.loginfo(rospy.get_caller_id() + 'laser:  %s', str(data) )
+def lasercallback(laserdata):
+    # global wallfollow
+    # global forwardcone
+    # global forwardspeed
+    # global rotspeed
+    # # count = 0
+    # # while count < 40:
+    # #     if laserdata.ranges[count] < 2.5:
+    # #         forwardcone[0] += laserdata.ranges[count]
+    # #     count = count + 1
+    # # forwardcone[0] = forwardcone[0] / 40
+    # # print("cone zero: ",forwardcone[0])
+    # #
+    # # count = 0
+    # # while count < 40:
+    # #     if laserdata.ranges[count] < 2.5:
+    # #         forwardcone[1] += laserdata.ranges[count]
+    # #     count = count + 1
+    # # forwardcone[1] = forwardcone[1] / 40
+    # # print("cone 1: ",forwardcone[1])
+    # count2 = 0
+    # while count2 < 9:
+    #     count = 0
+    #     while count < 39:
+    #         # if laserdata.ranges[count + (40 * count2)] < 2.5:
+    #         forwardcone[count2] += laserdata.ranges[count + (40 * count2)]
+    #         count = count + 1
+    #     forwardcone[count2] = forwardcone[count2] / 40
+    #     print("cone ",count2, " : ",forwardcone[count2])
+    #     count2 = count2 + 1
+    # print("count2 ",count2, " : ",count, " : ", ((count2 - 1) * 40) + count)
+    rospy.loginfo(rospy.get_caller_id() + 'laser:  %s', str(laserdata) )
 def callback(data):
     quaternion = (
     data.pose.pose.orientation.x,
@@ -47,7 +77,7 @@ def findline(data):
 def testlisten():
     #pub = rospy.Publisher('my_test', PoseStamped, queue_size=10)
     rospy.init_node('testdata', anonymous=False)
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(1) # 10hz
     global goalposition
     global botposition
     global count

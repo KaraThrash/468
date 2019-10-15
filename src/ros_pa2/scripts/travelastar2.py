@@ -59,71 +59,40 @@ def CheckLaserSection(laserdata):
             print("cone ",count2, " : ",forwardcone[count2])
             count2 = count2 + 1
 
-        if avoidspot == (0,0):
-            if forwardcone[4] >= 1.2 :
-                print("wayclear")
-                hasangle = True
-                hashistogram = True
 
-            else:
-                avoidspot = (botposition[0],botposition[1])
-                if forwardcone[5] + forwardcone[6] >= forwardcone[3] + forwardcone[2]:
-                    movespeed = 0
-                    rotspeed = -0.2
+        if forwardcone[4] <= 1.5 :
+            hasangle = False
+            if angleneeded > 1.5:
+                if forwardcone[6] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) - 0.5, (9 + botposition[0]) + 0.5)
+                elif forwardcone[3] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) - 0.5, (9 + botposition[0]) - 0.5)
                 else:
-                    movespeed = 0
-                    rotspeed = 0.4
-        else:
-            if forwardcone[4] >= 1.2 :
-
-                    movespeed = 0.5
-                    rotspeed = 0
-            else:
-
-                if forwardcone[5] + forwardcone[6] >= forwardcone[3] + forwardcone[2]:
-                    movespeed = 0
-                    rotspeed = -0.2
+                    avoidspot = ((10 - botposition[1]), (9 + botposition[0]) + 0.75)
+            elif angleneeded > 0:
+                if forwardcone[6] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
+                elif forwardcone[3] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) - 0.5)
                 else:
-                    movespeed = 0
-                    rotspeed = 0.4
-            distancefromavoid = math.fabs(avoidspot[0] -   botposition[0]) + math.fabs( avoidspot[1] -   botposition[1])
-
-            if distancefromavoid > 1:
-                hashistogram = True
-                hasangle = False
-                avoidspot = (0,0)
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) - 0.75)
+            elif angleneeded > -1.5:
+                if forwardcone[6] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
+                elif forwardcone[3] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
+                else:
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) - 0.75)
             else:
-                pub.publish(Vector3(movespeed,0,0),Vector3(0,0,rotspeed))
-            # if angleneeded > 1.5:
-            #     if forwardcone[6] >= 2.0:
-            #         avoidspot = ((10 - botposition.y) - 0.5, (9 + botposition.x) + 0.5)
-            #     elif forwardcone[3] >= 2.0:
-            #         avoidspot = ((10 - botposition.y) - 0.5, (9 + botposition.x) - 0.5)
-            #     else:
-            #         avoidspot = ((10 - botposition.y), (9 + botposition.x) + 0.75)
-            # elif angleneeded > 0:
-            #         if forwardcone[6] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) + 0.5, (9 + botposition.x) )
-            #         elif forwardcone[3] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) + 0.5, (9 + botposition.x) - 0.5)
-            #         else:
-            #             avoidspot = ((10 - botposition.y) + 0.75, (9 + botposition.x) - 0.75)
-            # elif angleneeded > -1.5:movespd
-            #         if forwardcone[6] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) + 0.5, (9 + botposition.x) )
-            #         elif forwardcone[3] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) + 0.5, (9 + botposition.x) )
-            #         else:
-            #             avoidspot = ((10 - botposition.y) + 0.75, (9 + botposition.x) - 0.75)
-            # else:
-            #         if forwardcone[6] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) - 0.5, (9 + botposition.x) )
-            #         elif forwardcone[3] >= 2.0:
-            #             avoidspot = ((10 - botposition.y) + 0.5, (9 + botposition.x) + 0.5 )
-            #         else:
-            #             avoidspot = ((10 - botposition.y) + 0.75, (9 + botposition.x) + 0.75)
-
-            # if ((10 - botposition.y) - astarpath[currentpathnode + 1][0]) < 0:
+                if forwardcone[6] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) - 0.5, (9 + botposition[0]) )
+                elif forwardcone[3] >= 2.0:
+                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) + 0.5 )
+                else:
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) + 0.75)
+        # else:
+            # avoidspot = (0,0)
+            # if ((10 - botposition[1]) - astarpath[currentpathnode + 1][0]) < 0:
             #     if ((9 + botposition.x) - astarpath[currentpathnode + 1][1]) < 0:
             #         newnode = (astarpath[currentpathnode + 1][0] + 0.5, astarpath[currentpathnode + 1][1] - 0.5)
             #     else:
@@ -133,13 +102,13 @@ def CheckLaserSection(laserdata):
             #         newnode = (astarpath[currentpathnode + 1][0] - 0.5, astarpath[currentpathnode + 1][1] - 0.5)
             #     else:
             #         newnode = (astarpath[currentpathnode + 1][0] - 0.5, astarpath[currentpathnode + 1][1] + 0.5)
-            # newnode = ((astarpath[currentpathnode + 1][1]) + (astarpath[currentpathnode + 1][1] - (10 - botposition.y)),(astarpath[currentpathnode + 1][0]) + (astarpath[currentpathnode + 1][0] - (9 + botposition.x)))
-            # print("newnode: ",newnode)
-            # avoidspot = (botposition.y,botposition.x)
-            # hasangle = False
-            # # astarpath.insert(currentpathnode + 1, newnode)
-            # hashistogram = False
+        # newnode = ((astarpath[currentpathnode + 1][1]) + (astarpath[currentpathnode + 1][1] - (10 - botposition[1])),(astarpath[currentpathnode + 1][0]) + (astarpath[currentpathnode + 1][0] - (9 + botposition.x)))
+        print("avoidspot: ",avoidspot)
+        # avoidspot = (botposition[1],botposition.x)
 
+        # astarpath.insert(currentpathnode + 1, newnode)
+        hashistogram = True
+        #
         # if forwardcone[3] < forwardcone[6] < 2.9:
         #     astarpath.insert(currentpathnode + 1, element)
         # else:
@@ -241,7 +210,7 @@ def getangle(data):
     global hashistogram
     global angleneeded
     global botposition
-    botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
+    # botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
     if hasangle == False:
 
         quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
@@ -271,7 +240,7 @@ def getangle(data):
             else:
                 angleneeded = -2.25
 
-        if math.fabs(euler[2] - angleneeded) > 0.25:
+        if math.fabs(euler[2] - angleneeded) > 0.15:
             rotspeed = math.fabs(math.fabs(euler[2] - angleneeded))
             if euler[2] < 3.0 and euler[2] > 0:
                 if euler[2] < angleneeded:
@@ -297,6 +266,12 @@ def gethistogram(data):
     # print("histo gram")
     if hashistogram == True:
         progress(data)
+        # if avoidspot == (0,0):
+        #     progress(data)
+        # else:
+        #     avoidprogress(data)
+    else:
+        rospy.Subscriber('base_scan', LaserScan, CheckLaserSection)
         # if avoidspot == (0,0):
         #     progress(data)
         # else:
@@ -344,10 +319,10 @@ def progress(data):
     global hashistogram
     global lastcheckpoint
     global botposition
-    botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
+    # botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
     disttonextnode = math.fabs((astarpath[(currentpathnode + 1)][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[(currentpathnode + 1)][0] + 0.5) -  (10 - data.pose.pose.position.y))
     disttolastnode = math.fabs(lastcheckpoint[1] -  (9 + data.pose.pose.position.x)) + math.fabs(( lastcheckpoint[0]) -  (10 - data.pose.pose.position.y))
-    if disttonextnode <= 0.55:
+    if disttonextnode <= 0.15:
         lastcheckpoint = (astarpath[currentpathnode][0],astarpath[currentpathnode][1])
         hasangle = False
         print(data.pose.pose.position.x + 9)
@@ -358,21 +333,23 @@ def progress(data):
         hashistogram = False
         print( euler[2])
     else:
-        # if hasangle == True:
-        if forwardcone[4] >= 2.9 and forwardcone[5] >= 2.9:
-            pub.publish(Vector3(0.45,0,0),Vector3(0,0,0))
-        else:
-            if forwardcone[6] >= 1.5:
-                pub.publish(Vector3(0.15,0,0),Vector3(0,0,-0.5))
-            else:
-                pub.publish(Vector3(0.15,0,0),Vector3(0,0,0.3))
+        pub.publish(Vector3(0.45,0,0),Vector3(0,0,0))
+    if disttolastnode >= 1.15:
+        lastcheckpoint = (botposition[1],botposition[0])
+        hasangle = False
+
+        print("far from last checkpoint" )
+        hashistogram = False
 
 
-        if disttolastnode >= 1.5:
-            # pub.publish(Vector3(-0.55,0,0),Vector3(0,0,0))
-            hasangle = False
-            print("far from last checkpoint: ", astarpath[currentpathnode] )
-            hashistogram = False
+
+
+
+        # if disttolastnode >= 1.5:
+        #     # pub.publish(Vector3(-0.55,0,0),Vector3(0,0,0))
+        #     hasangle = False
+        #     print("far from last checkpoint: ", astarpath[currentpathnode] )
+        #     hashistogram = False
         # else:
         #     pub.publish(Vector3(0,0,0),Vector3(0,0,0.1))
 
@@ -518,10 +495,11 @@ def rotater():
     hasangle = False
     while not rospy.is_shutdown():
         # negative rotation is right
-        if hashistogram == True:
-            rospy.Subscriber('base_pose_ground_truth', Odometry, astartest)
-        else:
-            rospy.Subscriber('base_scan', LaserScan, CheckLaserSection)
+        rospy.Subscriber('base_pose_ground_truth', Odometry, astartest)
+        # if hashistogram == True:
+        #     rospy.Subscriber('base_pose_ground_truth', Odometry, astartest)
+        # else:
+        #     rospy.Subscriber('base_scan', LaserScan, CheckLaserSection)
         # if botset == False:
         #     rospy.Subscriber('base_pose_ground_truth', Odometry, SetBotIntialPosition)
         # else:

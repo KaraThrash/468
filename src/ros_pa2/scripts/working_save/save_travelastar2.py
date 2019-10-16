@@ -68,28 +68,28 @@ def CheckLaserSection(laserdata):
                 elif forwardcone[3] >= 2.0:
                     avoidspot = ((10 - botposition[1]) - 0.5, (9 + botposition[0]) - 0.5)
                 else:
-                    avoidspot = ((10 - botposition[1]), (9 + botposition[0]) + 0.5)
+                    avoidspot = ((10 - botposition[1]), (9 + botposition[0]) + 0.75)
             elif angleneeded > 0:
                 if forwardcone[6] >= 2.0:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
                 elif forwardcone[3] >= 2.0:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) - 0.5)
                 else:
-                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) - 0.5)
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) - 0.75)
             elif angleneeded > -1.5:
                 if forwardcone[6] >= 2.0:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
                 elif forwardcone[3] >= 2.0:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) )
                 else:
-                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) - 0.5)
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) - 0.75)
             else:
                 if forwardcone[6] >= 2.0:
                     avoidspot = ((10 - botposition[1]) - 0.5, (9 + botposition[0]) )
                 elif forwardcone[3] >= 2.0:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) + 0.5 )
                 else:
-                    avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) + 0.5)
+                    avoidspot = ((10 - botposition[1]) + 0.75, (9 + botposition[0]) + 0.75)
         # else:
             # avoidspot = (0,0)
             # if ((10 - botposition[1]) - astarpath[currentpathnode + 1][0]) < 0:
@@ -291,7 +291,7 @@ def avoidprogress(data):
     global lastcheckpoint
     disttonextnode = math.fabs(avoidspot[1] -  (9 + data.pose.pose.position.x)) + math.fabs(( avoidspot[0]) -  (10 - data.pose.pose.position.y))
     disttolastnode = math.fabs(lastcheckpoint[1] -  (9 + data.pose.pose.position.x)) + math.fabs(( lastcheckpoint[0]) -  (10 - data.pose.pose.position.y))
-    if disttonextnode <= 0.05:
+    if disttonextnode <= 0.15:
         avoidspot = (0,0)
         hasangle = False
         print(data.pose.pose.position.x + 9)
@@ -354,66 +354,39 @@ def progress(data):
         #     pub.publish(Vector3(0,0,0),Vector3(0,0,0.1))
 
 
-def goalapproach(data):
+def goalapproach():
     global avoidspot
-    global forwardspeed
-    global rotspeed
-    global astarpath
-    global currentpathnode
-    global avoidspot
-    global hasangle
-    global euler
-    global hashistogram
     global angleneeded
-    global botposition
-    # botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
-
-
-    quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
-    euler = transform.euler_from_quaternion(quaternion)
-    disttonextnode = math.fabs((astarpath[((len(astarpath) - 1) )][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[((len(astarpath) - 1) )][0] + 0.5) -  (10 - data.pose.pose.position.y))
-
+    global currentpathnode
     angleneeded = 0.0
-    if disttonextnode > 0.05:
-        if astarpath[((len(astarpath) - 1) )][1] + 0.5 == round(9 + data.pose.pose.position.x,1):
-            if ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  <  round(10 - data.pose.pose.position.y,1):
-                angleneeded = 1.5
-            else:
-                angleneeded = -1.5# else:
-    #     progress(data)
-        elif astarpath[((len(astarpath) - 1) )][1] + 0.5  > (9 + data.pose.pose.position.x):
-            if ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  ==  round(10 - data.pose.pose.position.y,1):
-                angleneeded = 0.0
-            elif ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  <  round(10 - data.pose.pose.position.y,1):
-                angleneeded = 0.75
-            else:
-                angleneeded = -0.75
-        else:#if astarpath[currentpathnode][0] < (9 + data.pose.pose.position.x):
-            if ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  == round( 10 - data.pose.pose.position.y,1):
-                angleneeded = 2.9
-            elif ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  < round( 10 - data.pose.pose.position.y,1):
-                angleneeded = 2.25
-            else:
-                angleneeded = -2.25
 
-        if math.fabs(euler[2] - angleneeded) > 0.15:
-            rotspeed = math.fabs(math.fabs(euler[2] - angleneeded))
-            if euler[2] < 3.0 and euler[2] > 0:
-                if euler[2] < angleneeded:
-                    pub.publish(Vector3(0,0,0),Vector3(0,0,rotspeed))
-                else:
-                    pub.publish(Vector3(0,0,0),Vector3(0,0,-rotspeed))
-            else:
-                if euler[2] < angleneeded:
-                    pub.publish(Vector3(0,0,0),Vector3(0,0,rotspeed))
-                else:
-                    pub.publish(Vector3(0,0,0),Vector3(0,0,-rotspeed))
+    if astarpath[(currentpathnode )][1] + 0.5  == round(9 + data.pose.pose.position.x,1):
+        if ( astarpath[(currentpathnode + 1)][0]) + 0.5  <  round(10 - data.pose.pose.position.y,1):
+            angleneeded = 1.5
         else:
-            pub.publish(Vector3(0.1,0,0),Vector3(0,0,0))
+            angleneeded = -1.5
+    elif astarpath[(currentpathnode )][1] + 0.5 > (9 + data.pose.pose.position.x):
+        if ( astarpath[(currentpathnode )][0]) + 0.5  ==  round(10 - data.pose.pose.position.y,1):
+            angleneeded = 0.0
+        elif ( astarpath[(currentpathnode )][0]) + 0.5  <  round(10 - data.pose.pose.position.y,1):
+            angleneeded = 0.75
+        else:
+            angleneeded = -0.75
+    else:#if astarpath[currentpathnode][0] < (9 + data.pose.pose.position.x):
+        if ( astarpath[(currentpathnode )][0]) + 0.5 == round( 10 - data.pose.pose.position.y,1):
+            angleneeded = 2.9
+        elif ( astarpath[(currentpathnode )][0]) + 0.5 < round( 10 - data.pose.pose.position.y,1):
+            angleneeded = 2.25
+        else:
+            angleneeded = -2.25
+    # print( euler[2])
+    # print( angleneeded)
+    # print( astarpath[currentpathnode])
+    # print( astarpath[currentpathnode + 1])
+    if math.fabs(euler[2] - angleneeded) > 0.2:
+        pub.publish(Vector3(0,0,0),Vector3(0,0,1.15))
     else:
-        print("I'm Home")
-        pub.publish(Vector3(0,0,0),Vector3(0,0,2.3))
-
+        pub.publish(Vector3(1.25,0,0),Vector3(0,0,0))
 
 
 def astartest(data):
@@ -429,14 +402,9 @@ def astartest(data):
     botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
     quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
     euler = transform.euler_from_quaternion(quaternion)
-    # disttogoal = math.fabs((astarpath[(len(astarpath) - 1 )][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[(len(astarpath) - 1 )][0] + 0.5) -  (10 - data.pose.pose.position.y))
 
-    # if disttogoal < 0.6:
-    #     currentpathnode = len(astarpath) - 1
     if currentpathnode < (len(astarpath) - 1):
         getangle(data)
-    else:
-        goalapproach(data)
         # if avoidspot == (0,0):
         #     getangle(data)
         # else:

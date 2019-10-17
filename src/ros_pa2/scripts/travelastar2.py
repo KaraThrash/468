@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 import math
-import astar
+import xcom
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist,Vector3
@@ -522,7 +522,7 @@ def rotater():
     goalposition = Vector3(0,0,0)
     botposition = Vector3(0,0,0)
     global astarpath
-    astarpath = astar.mainx();
+    astarpath = xcom.main();
     hashistogram = True;
     hasangle = False
     while not rospy.is_shutdown():

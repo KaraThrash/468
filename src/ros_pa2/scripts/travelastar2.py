@@ -522,7 +522,14 @@ def rotater():
     goalposition = Vector3(0,0,0)
     botposition = Vector3(0,0,0)
     global astarpath
-    astarpath = xcom.main();
+    # rospy.set_param('goalx', 11.0)
+    # rospy.set_param('goaly', 1.0)
+    goalx = 1
+    goaly = 1
+    goalx = rospy.get_param("goalx")
+    goaly = rospy.get_param("goaly")
+    print(goalx,goaly)
+    astarpath = xcom.main(goaly,goalx);
     hashistogram = True;
     hasangle = False
     while not rospy.is_shutdown():

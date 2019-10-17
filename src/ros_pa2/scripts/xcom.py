@@ -45,7 +45,7 @@ def astar(maze2, start, end):
 
     # Add the start node
 
-    print(open_list)
+    # #print(open_list)
     # Loop until you find the end
     current_node = start_node
 
@@ -61,32 +61,32 @@ def astar(maze2, start, end):
 
         # Found the goal
         # if current_node.x == end[1] and current_node.y == end[0]:
-        #     print(current_node.y,current_node.x)
+        #     #print(current_node.y,current_node.x)
         #     path = []
         #     current = current_node
         #     while current.x != start[1] and start[0] != current.y:
         #         path.append((current.y,current.x))
         #         maze[current.y][current.x] = 2
         #         current = current.parent
-        #     print(current.y,current.x)
-        #     print(start_node.y,start_node.x)
+        #     #print(current.y,current.x)
+        #     #print(start_node.y,start_node.x)
         #     for el in maze:
-        #         print(el)
-        #     # print(path)
+        #         #print(el)
+        #     # #print(path)
         #     return path[::-1] # Return reversed path
 
 
 
         if current_node.x > 0:
             if maparray[current_node.y][current_node.x - 1].wall == 0:
-                print(maparray[current_node.y][current_node.x - 1])
+                # #print(maparray[current_node.y][current_node.x - 1])
                 if maparray[current_node.y][current_node.x - 1].f == -1 or maparray[current_node.y][current_node.x - 1].f > (1 + current_node.f + maparray[current_node.y][current_node.x - 1].g):
                     maparray[current_node.y][current_node.x - 1].f = current_node.f + maparray[current_node.y][current_node.x - 1].g
                     maparray[current_node.y][current_node.x - 1].parent = current_node
                     open_list.append(maparray[current_node.y][current_node.x - 1])
         if current_node.x < len(maparray[0]) - 1:
             if maparray[current_node.y][current_node.x + 1].wall == 0:
-                print(maparray[current_node.y][current_node.x + 1].wall )
+                # #print(maparray[current_node.y][current_node.x + 1].wall )
                 if maparray[current_node.y][current_node.x + 1].f == -1 or maparray[current_node.y][current_node.x + 1].f > (1 + current_node.f + maparray[current_node.y][current_node.x + 1].g):
                     maparray[current_node.y][current_node.x + 1].f = current_node.f + maparray[current_node.y][current_node.x + 1].g
                     maparray[current_node.y][current_node.x + 1].parent = current_node
@@ -95,7 +95,7 @@ def astar(maze2, start, end):
 
         if current_node.y > 0:
             if maparray[current_node.y - 1][current_node.x ].wall == 0:
-                print(maparray[current_node.y - 1][current_node.x ].wall)
+                #print(maparray[current_node.y - 1][current_node.x ].wall)
                 if maparray[current_node.y - 1 ][current_node.x ].f == -1 or maparray[current_node.y - 1][current_node.x ].f > (1 + current_node.f + maparray[current_node.y - 1][current_node.x ].g):
                     maparray[current_node.y - 1][current_node.x ].f = current_node.f + maparray[current_node.y - 1][current_node.x ].g
                     maparray[current_node.y - 1][current_node.x ].parent = current_node
@@ -104,7 +104,7 @@ def astar(maze2, start, end):
             if current_node.x > 0:
                 if maparray[current_node.y - 1][current_node.x - 1].wall == 0:
                     if maparray[current_node.y ][current_node.x - 1].wall != 1 and maparray[current_node.y - 1][current_node.x ].wall != 1:
-                        print(maparray[current_node.y - 1][current_node.x - 1])
+                        #print(maparray[current_node.y - 1][current_node.x - 1])
                         if maparray[current_node.y - 1][current_node.x - 1].f == -1 or maparray[current_node.y - 1][current_node.x - 1].f > (2 + current_node.f + maparray[current_node.y - 1][current_node.x - 1].g):
                             maparray[current_node.y - 1][current_node.x - 1].f = current_node.f + maparray[current_node.y - 1][current_node.x - 1].g
                             maparray[current_node.y - 1][current_node.x - 1].parent = current_node
@@ -112,14 +112,14 @@ def astar(maze2, start, end):
             if current_node.x < len(maparray[0]) - 1:
                 if maparray[current_node.y - 1][current_node.x + 1].wall == 0:
                     if maparray[current_node.y ][current_node.x + 1].wall != 1 and maparray[current_node.y - 1][current_node.x ].wall != 1:
-                        print(maparray[current_node.y - 1][current_node.x + 1].wall )
+                        #print(maparray[current_node.y - 1][current_node.x + 1].wall )
                         if maparray[current_node.y - 1][current_node.x + 1].f == -1 or maparray[current_node.y - 1][current_node.x + 1].f > (2 + current_node.f + maparray[current_node.y - 1][current_node.x + 1].g):
                             maparray[current_node.y - 1][current_node.x + 1].f = current_node.f + maparray[current_node.y - 1][current_node.x + 1].g
                             maparray[current_node.y - 1][current_node.x + 1].parent = current_node
                             open_list.append(maparray[current_node.y - 1][current_node.x + 1])
         if current_node.y < len(maparray) - 1:
             if maparray[current_node.y + 1][current_node.x ].wall == 0:
-                print(maparray[current_node.y + 1][current_node.x ].wall)
+                #print(maparray[current_node.y + 1][current_node.x ].wall)
                 if maparray[current_node.y + 1 ][current_node.x ].f == -1 or maparray[current_node.y + 1][current_node.x ].f > (1 + current_node.f + maparray[current_node.y + 1][current_node.x ].g):
                     maparray[current_node.y + 1][current_node.x ].f = current_node.f + maparray[current_node.y + 1][current_node.x ].g
                     maparray[current_node.y + 1][current_node.x ].parent = current_node
@@ -128,7 +128,7 @@ def astar(maze2, start, end):
                 if current_node.x > 0:
                     if maparray[current_node.y + 1][current_node.x - 1].wall == 0:
                         if maparray[current_node.y ][current_node.x - 1].wall != 1 and maparray[current_node.y + 1][current_node.x ].wall != 1:
-                            print(maparray[current_node.y + 1][current_node.x - 1])
+                            #print(maparray[current_node.y + 1][current_node.x - 1])
                             if maparray[current_node.y + 1][current_node.x - 1].f == -1 or maparray[current_node.y + 1][current_node.x - 1].f > (2 + current_node.f + maparray[current_node.y + 1][current_node.x - 1].g):
                                 maparray[current_node.y + 1][current_node.x - 1].f = current_node.f + maparray[current_node.y + 1][current_node.x - 1].g
                                 maparray[current_node.y + 1][current_node.x - 1].parent = current_node
@@ -136,42 +136,43 @@ def astar(maze2, start, end):
                 if current_node.x < len(maparray[0]) - 1:
                     if maparray[current_node.y + 1][current_node.x + 1].wall == 0:
                         if maparray[current_node.y ][current_node.x + 1].wall != 1 and maparray[current_node.y + 1][current_node.x ].wall != 1:
-                            print(maparray[current_node.y + 1][current_node.x + 1].wall )
+                            #print(maparray[current_node.y + 1][current_node.x + 1].wall )
                             if maparray[current_node.y + 1][current_node.x + 1].f == -1 or maparray[current_node.y + 1][current_node.x + 1].f > (2 + current_node.f + maparray[current_node.y + 1][current_node.x + 1].g):
                                 maparray[current_node.y + 1][current_node.x + 1].f = current_node.f + maparray[current_node.y + 1][current_node.x + 1].g
                                 maparray[current_node.y + 1][current_node.x + 1].parent = current_node
                                 open_list.append(maparray[current_node.y + 1][current_node.x + 1])
-        # print(len(open_list))
-        for el in open_list:
-            print(" : ",el.y," : ",el.x)
+        # #print(len(open_list))
+        # for el in open_list:
+            #print(" : ",el.y," : ",el.x)
 
         current_node = open_list[0]
         current_index = 0
-        print(current_node.y,current_node.x)
+        #print(current_node.y,current_node.x)
         for el in open_list:
             if el.f < current_node.f:
                 current_node = el
-                print(current_node.y,current_node.x)
+                #print(current_node.y,current_node.x)
         open_list.remove(current_node)
     # if current_node.x == end[1] and current_node.y == end[0]:
-    print(current_node.y,current_node.x)
+    #print(current_node.y,current_node.x)
     path = []
     current = current_node
     while current.position != start:
         path.append((current.y,current.x))
-        print(len(path),"path : nodes")
+        #print(len(path),"path : nodes")
         maze[current.y][current.x] = 2
         current = current.parent
 
-    print(current.y,current.x)
-    print(start_node.y,start_node.x)
-    for el in maze:
-        print(el)
-    # print(path)
+    #print(current.y,current.x)
+    #print(start_node.y,start_node.x)
+    # for el in maze:
+        #print(el)
+    # #print(path)
     return path[::-1] # Return reversed path
             # Make sure within range
-            # if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
-            #     print("-")maparray
+            # if node_posit# rospy.set_param('goalx', '11.0')
+    # rospy.set_param('goaly', '111.0')ion[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
+            #     #print("-")maparray
             #     continue
             #
             # # Make sure walkable terrain
@@ -188,10 +189,10 @@ def astar(maze2, start, end):
         #
         # # Loop through children
         # for child in children:
-        #     # print("==")
+        #     # #print("==")
         #     count = count + 1
         #     if count > 1000:
-        #         print("xx", count2)
+        #         #print("xx", count2)
         #         count = 0
         #         count2 = count2 + 1
         #     # Child is on the c.flosed list
@@ -215,7 +216,7 @@ def astar(maze2, start, end):
         #     open_list.append(child)
 
 
-def main():        #5
+def main(endx,endy):        #5
     global maparray
     global maze
     maze = [[0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0],
@@ -241,16 +242,6 @@ def main():        #5
          # [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7],
            [0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1]]
 
-    # maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0.f, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
     # maze = [[0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0],
     #      # [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7],
@@ -286,7 +277,8 @@ def main():        #5
     #        [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0],
     #        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
     #        [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0],
-    #        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],,0,0,0],
+    #        [1,1,1,1,1,1,1,1,1,1,# rospy.set_param('goalx', '11.0')
+    # rospy.set_param('goaly', '111.0')1,1,1,1,1,1,1,0],,0,0,0],
     #      # [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7],
     #        [0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1],
     #        [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],0
@@ -315,7 +307,8 @@ def main():        #5
     countx = 0
     county = -1
     start = (12, 1)
-    end = (1,13)
+    # end = (1,13)
+    end = (endy,endx)
     for row in maze:
         countx = 0
         county = county + 1
@@ -333,9 +326,9 @@ def main():        #5
             countx = countx + 1
 
      # //shorter y because the bot has to approach from the opening
-    # print(maparray)
+    # #print(maparray)
     path = astar(maze, start, end)
-    print(path)
+    #print(path)
     return path
 #
 # if __name__ == '__main__':

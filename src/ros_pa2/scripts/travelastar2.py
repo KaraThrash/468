@@ -17,7 +17,7 @@ botset = False
 wallfollow = False
 wallfollowleft = False
 forwardcone = [0,0,0,0,0,0,0,0,0,0,0]
-histogram = [[0,0,0],[0,0,0],[0,0,0]]
+
 forwardspeed = 0.0
 rotspeed = 0.0
 astarpath = []
@@ -90,29 +90,9 @@ def CheckLaserSection(laserdata):
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) + 0.5 )
                 else:
                     avoidspot = ((10 - botposition[1]) + 0.5, (9 + botposition[0]) + 0.5)
-        # else:
-            # avoidspot = (0,0)
-            # if ((10 - botposition[1]) - astarpath[currentpathnode + 1][0]) < 0:
-            #     if ((9 + botposition.x) - astarpath[currentpathnode + 1][1]) < 0:
-            #         newnode = (astarpath[currentpathnode + 1][0] + 0.5, astarpath[currentpathnode + 1][1] - 0.5)
-            #     else:
-            #         newnode = (astarpath[currentpathnode + 1][0] + 0.5, astarpath[currentpathnode + 1][1] + 0.5)
-            # else:
-            #     if ((9 + botposition.x) - astarpath[currentpathnode + 1][1]) < 0:
-            #         newnode = (astarpath[currentpathnode + 1][0] - 0.5, astarpath[currentpathnode + 1][1] - 0.5)
-            #     else:
-            #         newnode = (astarpath[currentpathnode + 1][0] - 0.5, astarpath[currentpathnode + 1][1] + 0.5)
-        # newnode = ((astarpath[currentpathnode + 1][1]) + (astarpath[currentpathnode + 1][1] - (10 - botposition[1])),(astarpath[currentpathnode + 1][0]) + (astarpath[currentpathnode + 1][0] - (9 + botposition.x)))
-        print("avoidspot: ",avoidspot)
-        # avoidspot = (botposition[1],botposition.x)
 
-        # astarpath.insert(currentpathnode + 1, newnode)
         hashistogram = True
-        #
-        # if forwardcone[3] < forwardcone[6] < 2.9:
-        #     astarpath.insert(currentpathnode + 1, element)
-        # else:
-        #     astarpath.insert(currentpathnode + 1, element)
+
 
 
 def quattest(data):
@@ -374,7 +354,7 @@ def goalapproach(data):
     disttonextnode = math.fabs((astarpath[((len(astarpath) - 1) )][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[((len(astarpath) - 1) )][0] + 0.5) -  (10 - data.pose.pose.position.y))
 
     angleneeded = 0.0
-    if disttonextnode > 0.05:
+    if disttonextnode > 0.15:
         if astarpath[((len(astarpath) - 1) )][1] + 0.5 == round(9 + data.pose.pose.position.x,1):
             if ( astarpath[((len(astarpath) - 1) )][0] + 0.5)  <  round(10 - data.pose.pose.position.y,1):
                 angleneeded = 1.5
@@ -426,17 +406,30 @@ def astartest(data):
     global hasangle
     global euler
     global botposition
-    botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
-    quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
-    euler = transform.euler_from_quaternion(quaternion)
-    # disttogoal = math.fabs((astarpath[(len(astarpath) - 1 )][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[(len(astarpath) - 1 )][0] + 0.5) -  (10 - data.pose.pose.position.y))
-
-    # if disttogoal < 0.6:
-    #     currentpathnode = len(astarpath) - 1
-    if currentpathnode < (len(astarpath) - 1):
-        getangle(data)
+    if len(astarpath) <= 0:
+        goalx = 1
+        goaly = 1
+        goalx = rospy.get_param("goalx")
+        goaly = rospy.get_param("goaly")
+        print("goal:" ,goalx,goaly)
+        startx = 0
+        starty = 0
+        startx = int(data.pose.pose.position.x)
+        starty = int(data.pose.pose.position.y)
+        print("start:" ,startx,starty)
+        astarpath = xcom.mainx(int(goaly),int(goalx),starty,startx);
     else:
-        goalapproach(data)
+        botposition = (data.pose.pose.orientation.x,data.pose.pose.orientation.y,0)
+        quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
+        euler = transform.euler_from_quaternion(quaternion)
+        # disttogoal = math.fabs((astarpath[(len(astarpath) - 1 )][1] + 0.5) -  (9 + data.pose.pose.position.x)) + math.fabs(( astarpath[(len(astarpath) - 1 )][0] + 0.5) -  (10 - data.pose.pose.position.y))
+
+        # if disttogoal < 0.6:
+        #     currentpathnode = len(astarpath) - 1
+        if currentpathnode < (len(astarpath) - 1):
+            getangle(data)
+        else:
+            goalapproach(data)
         # if avoidspot == (0,0):
         #     getangle(data)
         # else:
@@ -524,12 +517,7 @@ def rotater():
     global astarpath
     # rospy.set_param('goalx', 11.0)
     # rospy.set_param('goaly', 1.0)
-    goalx = 1
-    goaly = 1
-    goalx = rospy.get_param("goalx")
-    goaly = rospy.get_param("goaly")
-    print(goalx,goaly)
-    astarpath = xcom.main(goaly,goalx);
+
     hashistogram = True;
     hasangle = False
     while not rospy.is_shutdown():

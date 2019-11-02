@@ -5,6 +5,10 @@ roscore
 rosrun ros_pa1 pathfind.py
 roslaunch ros_pa2 pa2.launch
 rosrun ros_pa2 rottest.py
+
+rosrun ros_pa3 finalbotpa2.py
+
+
 quaternion = [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w]
     euler = transform.euler_from_quaternion(quaternion)
     print(euler)

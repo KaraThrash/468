@@ -69,3 +69,10 @@
 /home/apollo/catkin_ws/build/ros_pa2/CMakeFiles/install/local.dir
 /home/apollo/catkin_ws/build/ros_pa2/CMakeFiles/test.dir
 /home/apollo/catkin_ws/build/ros_pa2/CMakeFiles/edit_cache.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/list_install_components.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/install.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/rebuild_cache.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/install/strip.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/install/local.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/test.dir
+/home/apollo/catkin_ws/build/ros_pa3/CMakeFiles/edit_cache.dir

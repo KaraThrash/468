@@ -1099,6 +1099,24 @@ ros_pa2/preinstall:
 .PHONY : ros_pa2/preinstall
 
 #=============================================================================
+# Directory level rules for directory ros_pa3
+
+# Convenience name for "all" pass in the directory.
+ros_pa3/all:
+
+.PHONY : ros_pa3/all
+
+# Convenience name for "clean" pass in the directory.
+ros_pa3/clean:
+
+.PHONY : ros_pa3/clean
+
+# Convenience name for "preinstall" pass in the directory.
+ros_pa3/preinstall:
+
+.PHONY : ros_pa3/preinstall
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.

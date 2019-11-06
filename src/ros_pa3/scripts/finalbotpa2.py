@@ -2,6 +2,7 @@
 import rospy
 import math
 import rosbag
+import numpy
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 from std_msgs.msg import String
@@ -32,15 +33,35 @@ def astartoaster():
     # rospy.set_param('goaly', 1.0)
     bag = rosbag.Bag('grid.bag')
     print(bag)
+    # f = open("observations.txt", "a")
+
+    # f.write()
+
     for topic, msg, t in bag.read_messages(topics=[ 'Observations']):
-        print("Observations: ", msg.timeTag, " ", msg.tagNum," ", msg.range," ", msg.bearing.x," ", msg.bearing.y," ", msg.bearing.z," ", msg.bearing.w)
+        f = open("observations.txt", "a")
+        f.write(str(msg))
+        f.close()
+        f = open("observations.txt", "a")
+        f.write("\n")
+        f.write("\n")
+        f.write("\n")
+        f.close()
+        # print("Observations: ", msg.timeTag, " ", msg.tagNum," ", msg.range," ", msg.bearing.x," ", msg.bearing.y," ", msg.bearing.z," ", msg.bearing.w)
     for topic, msg, t in bag.read_messages(topics=[ 'Movements']):
         # print(msg)
+        f = open("movements.txt", "a")
+        f.write(str(msg))
+        f.close()
+        f = open("movements.txt", "a")
+        f.write("\n")
+        f.write("\n")
+        f.write("\n")
+        f.close()
         print("Movements1: ", msg.timeTag, " ", round(msg.rotation1.x,2)," ", round(msg.rotation1.y,2)," ", round(msg.rotation1.z,2)," ", round(msg.rotation1.w,2))
         print(" translation:", round(msg.translation,2))
         print("Movements2: ",round(msg.rotation2.x,2)," ", round(msg.rotation2.y,2)," ", round(msg.rotation2.z,2)," ", round(msg.rotation2.w,2)," ")
         # print("obs: ", msg.timeTag, " ", msg.tagNum," ", msg.range," ", msg.bearing.x," ", msg.bearing.y," ", msg.bearing.z," ", msg.bearing.w)
-
+        f.close()
 
     while not rospy.is_shutdown():
         # rospy.loginfo('my toast')

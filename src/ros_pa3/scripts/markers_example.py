@@ -5,6 +5,7 @@
 import rospy
 import rosbag
 import math
+import numpy
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 
@@ -270,9 +271,14 @@ def quattest(data):
 
 def setbotrot(data):
     global botrot
+    # quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
     quaternion = (data.x,data.y,data.z,data.w)
     euler = transform.euler_from_quaternion(quaternion)
-
+    # print("xxxxxxxxxxeulerxxxxxxxxxxxxxxxxxxx")
+    # print(numpy.degrees(euler))
+    # roll = euler[0]
+    # pitch = euler[1]
+    # yaw = euler[2]
     if euler[2] > -.75 and euler[2] < 0.75:
         botrot = 0
     elif euler[2] >= -2.25 and euler[2] <= -0.75:
@@ -313,6 +319,7 @@ if __name__ == "__main__":
     count2 = 0
     bag = rosbag.Bag('grid.bag')
     botpos = [(0,0)]
+
     while count2 < 50:
         for topic, msg, t in bag.read_messages(topics=[ 'Movements']):
             if count < 50:

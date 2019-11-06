@@ -178,7 +178,7 @@ def do_localize():
 	cached_pt.x = grid_centres[11][27][20].x/PLOT_DOWNSIZE#100.0
 	cached_pt.y = grid_centres[11][27][20].y/PLOT_DOWNSIZE#100.0
 	msg_count = 0
-	while msg_count<19:
+	while msg_count<3:
 		topic, msg, time_stamp = bag_msgs.pop()
 		if(msg==None):
 			break

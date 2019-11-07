@@ -15,7 +15,8 @@ import tf.transformations as transform
 
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist,Vector3
-
+grid = []
+grida = []
 rospy.loginfo('Rviz example')
 botrot = 0.0
 zplus = 0.0
@@ -292,8 +293,157 @@ def setbotrot(data):
     else:
         botrot = 0
 
+def test(msg):
+    global grid
+    global grida
+    quaternion = (msg.rotation1.x,msg.rotation1.y,msg.rotation1.z,msg.rotation1.w)
+    euler = transform.euler_from_quaternion(quaternion)
+
+    degrees = numpy.degrees(euler)
+    print("rot1: ", degrees)
+    # numpy.degrees(euler[2])
+    # print(degrees[3])
+    # print("red")
+    gausrots =  numpy.random.normal(degrees[2], 45, 10) #rot1
+    sortedrots = [0,0,0,0]
+    for normalrot in gausrots:
+        if normalrot < 45 and normalrot > -45:
+            sortedrots[0] = sortedrots[0] + 1
+        elif normalrot < 135 and normalrot > 0:
+            sortedrots[1] = sortedrots[1] + 1
+        elif normalrot < -45 and normalrot > -135 :
+            sortedrots[3] = sortedrots[3] + 1
+        else:
+            sortedrots[2] = sortedrots[2] + 1
+
+
+    quaternion2 = (msg.rotation2.x,msg.rotation2.y,msg.rotation2.z,msg.rotation2.w)
+    euler2 = transform.euler_from_quaternion(quaternion2)
+    degrees2 = numpy.degrees(euler2)
+    gausrots2 = numpy.random.normal(degrees2[2], 45, 10) #rot2
+    sortedrots2 = [0,0,0,0]
+    for normalrot2 in gausrots2:
+        if normalrot2 < 45 and normalrot2 > -45:
+            sortedrots2[0] = sortedrots2[0] + 1
+        elif normalrot2 < 135 and normalrot2 > 0:
+            sortedrots2[1] = sortedrots2[1] + 1
+        elif normalrot2 < -45 and normalrot2 > -135 :
+            sortedrots2[3] = sortedrots2[3] + 1
+        else:
+            sortedrots2[2] = sortedrots2[2] + 1
+
+    travelnormal = numpy.random.normal((msg.translation * 5), 0.5, 10) # translation
+    rowcount = -1
+    colcount = -1
+
+    # go through each square and if there is probabikity that the bot is there
+    # Then set the values on the OTHER grid, resulting in the sum of all possible ecurrent states
+    while rowcount < 35:
+        # print("row: ",rowcount)
+        rowcount = rowcount + 1
+        colcount = -1
+        while colcount < 35:
+            colcount = colcount + 1
+            col = grid[rowcount][colcount]
+
+            for distnotrounded in travelnormal:
+                dist = 0
+                dist = int(math.ceil(distnotrounded))
+                # NOTE: iterate through each possible rotation and current rotation in square to check if moving the distance is on the map
+                if col[0] > 0: # right
+                    if colcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount + dist][0] + (col[0] * sortedrots2[0] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount + dist][1] + (col[0] * sortedrots2[0] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount + dist][2] + (col[0] * sortedrots2[0] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount + dist][3] + (col[0] * sortedrots2[0] * sortedrots2[3])
+                    if colcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount - dist][0] + (col[0] * sortedrots2[2] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount - dist][1] + (col[0] * sortedrots2[2] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount - dist][2] + (col[0] * sortedrots2[2] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount - dist][3] + (col[0] * sortedrots2[2] * sortedrots2[3])
+                    if rowcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount - dist][colcount ][0] + (col[0] * sortedrots2[1] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount - dist][colcount ][1] + (col[0] * sortedrots2[1] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount - dist][colcount ][2] + (col[0] * sortedrots2[1] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount - dist][colcount ][3] + (col[0] * sortedrots2[1] * sortedrots2[3])
+                    if rowcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount + dist][colcount ][0] + (col[0] * sortedrots2[3] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount + dist][colcount ][1] + (col[0] * sortedrots2[3] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount + dist][colcount ][2] + (col[0] * sortedrots2[3] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount + dist][colcount ][3] + (col[0] * sortedrots2[3] * sortedrots2[3])
+
+                    # rot 1: the bot current facing up
+                if col[1] > 0: # up
+                    if colcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount + dist][0] + (col[1] * sortedrots2[3] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount + dist][1] + (col[1] * sortedrots2[3] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount + dist][2] + (col[1] * sortedrots2[3] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount + dist][3] + (col[1] * sortedrots2[3] * sortedrots2[3])
+                    if colcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount - dist][0] + (col[1] * sortedrots2[0] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount - dist][1] + (col[1] * sortedrots2[0] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount - dist][2] + (col[1] * sortedrots2[0] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount - dist][3] + (col[1] * sortedrots2[0] * sortedrots2[3])
+                    if rowcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount - dist][colcount ][0] + (col[1] * sortedrots2[1] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount - dist][colcount ][1] + (col[1] * sortedrots2[1] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount - dist][colcount ][2] + (col[1] * sortedrots2[1] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount - dist][colcount ][3] + (col[1] * sortedrots2[1] * sortedrots2[3])
+                    if rowcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount + dist][colcount ][0] + (col[1] * sortedrots2[2] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount + dist][colcount ][1] + (col[1] * sortedrots2[2] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount + dist][colcount ][2] + (col[1] * sortedrots2[2] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount + dist][colcount ][3] + (col[1] * sortedrots2[2] * sortedrots2[3])
+                if col[2] > 0: # left
+                    if colcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount + dist][0] + (col[2] * sortedrots2[2] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount + dist][1] + (col[2] * sortedrots2[2] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount + dist][2] + (col[2] * sortedrots2[2] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount + dist][3] + (col[2] * sortedrots2[2] * sortedrots2[3])
+                    if colcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount - dist][0] + (col[2] * sortedrots2[0] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount - dist][1] + (col[2] * sortedrots2[0] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount - dist][2] + (col[2] * sortedrots2[0] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount - dist][3] + (col[2] * sortedrots2[0] * sortedrots2[3])
+                    if rowcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount - dist][colcount ][0] + (col[2] * sortedrots2[3] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount - dist][colcount ][1] + (col[2] * sortedrots2[3] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount - dist][colcount ][2] + (col[2] * sortedrots2[3] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount - dist][colcount ][3] + (col[2] * sortedrots2[3] * sortedrots2[3])
+                    if rowcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount + dist][colcount ][0] + (col[2] * sortedrots2[1] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount + dist][colcount ][1] + (col[2] * sortedrots2[1] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount + dist][colcount ][2] + (col[2] * sortedrots2[1] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount + dist][colcount ][3] + (col[2] * sortedrots2[1] * sortedrots2[3])
+                if col[3] > 0: # down
+                    if colcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount + dist][0] + (col[3] * sortedrots2[1] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount + dist][1] + (col[3] * sortedrots2[1] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount + dist][2] + (col[3] * sortedrots2[1] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount + dist][3] + (col[3] * sortedrots2[1] * sortedrots2[3])
+                    if colcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount][colcount - dist][0] + (col[3] * sortedrots2[3] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount][colcount - dist][1] + (col[3] * sortedrots2[3] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount][colcount - dist][2] + (col[3] * sortedrots2[3] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount][colcount - dist][3] + (col[3] * sortedrots2[3] * sortedrots2[3])
+                    if rowcount - dist > 0:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount - dist][colcount ][0] + (col[3] * sortedrots2[2] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount - dist][colcount ][1] + (col[3] * sortedrots2[2] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount - dist][colcount ][2] + (col[3] * sortedrots2[2] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount - dist][colcount ][3] + (col[3] * sortedrots2[2] * sortedrots2[3])
+                    if rowcount + dist < 35:
+                        grida[rowcount][colcount + dist][0] = grida[rowcount + dist][colcount ][0] + (col[3] * sortedrots2[0] * sortedrots2[0])
+                        grida[rowcount][colcount + dist][1] = grida[rowcount + dist][colcount ][1] + (col[3] * sortedrots2[0] * sortedrots2[1])
+                        grida[rowcount][colcount + dist][2] = grida[rowcount + dist][colcount ][2] + (col[3] * sortedrots2[0] * sortedrots2[2])
+                        grida[rowcount][colcount + dist][3] = grida[rowcount + dist][colcount ][3] + (col[3] * sortedrots2[0] * sortedrots2[3])
+
+
+
+
 if __name__ == "__main__":
     global botrot
+    global grid
+    global grida
     rospy.init_node('rviz_pub_example')
 
     # Rviz is a node that can subscribe to topics of certain message types.
@@ -319,20 +469,45 @@ if __name__ == "__main__":
     count2 = 0
     bag = rosbag.Bag('grid.bag')
     botpos = [(0,0)]
+    #
+    # while count2 < 50:
+    #     for topic, msg, t in bag.read_messages(topics=[ 'Movements']):
+    #         if count < 50:
+    #             # print("Observations: ", msg.timeTag, " ", msg.tagNum," ", msg.range," ", msg.bearing.x," ", msg.bearing.y," ", msg.bearing.z," ", msg.bearing.w)
+    #             # line_points.append((line_points[count][0] + (round(msg.rotation1.z,1)),line_points[count][1] +  round(msg.rotation1.w,1)))
+    #             # count = count + 1
+    #
+    #             newxy = quattest(msg.rotation1)
+    #             botpos.append((botpos[count][0] + (newxy[0] * msg.translation ),botpos[count][1] +  (newxy[1] * msg.translation )))
+    #             line_points.append((botpos[count][0] + (newxy[0] * msg.translation ),botpos[count][1] +  (newxy[1] * msg.translation )))
+    #             # setbotrot(msg.rotation2)
+    #             count = count + 1
+    #     count2 = count2 + 1
 
-    while count2 < 50:
-        for topic, msg, t in bag.read_messages(topics=[ 'Movements']):
-            if count < 50:
-                # print("Observations: ", msg.timeTag, " ", msg.tagNum," ", msg.range," ", msg.bearing.x," ", msg.bearing.y," ", msg.bearing.z," ", msg.bearing.w)
-                # line_points.append((line_points[count][0] + (round(msg.rotation1.z,1)),line_points[count][1] +  round(msg.rotation1.w,1)))
-                # count = count + 1
+    count = 0
+    grid = []
+    grida = []
 
-                newxy = quattest(msg.rotation1)
-                botpos.append((botpos[count][0] + (newxy[0] * msg.translation ),botpos[count][1] +  (newxy[1] * msg.translation )))
-                line_points.append((botpos[count][0] + (newxy[0] * msg.translation ),botpos[count][1] +  (newxy[1] * msg.translation )))
-                # setbotrot(msg.rotation2)
-                count = count + 1
-        count2 = count2 + 1
+    # NOTE: for movement multiople translation by 5, result in numbert of squares distance
+    while count < 36:
+        grid2 = []
+        grid.append(grid2)
+        gridb = []
+        grida.append(gridb)
+        count = count + 1
+        count2 = 0
+        while count2 < 36:
+            grid3 = [0,0,0,0] # the 4 possible rotations that could be in the square
+            gridc = [0,0,0,0]
+            grid2.append(grid3)
+            gridb.append(gridc)
+            count2 = count2 + 1
+    grid[4][2] = [1,1,1,1]
+    grid[14][5] = [1,1,1,1]
+    grid[22][2] = [1,1,1,1]
+    for topic, msg, t in bag.read_messages(topics=[ 'Movements']):
+        test(msg)
+    # print(grida)
     # Call the display functions in a loop to see the markers on rviz over time
     while not rospy.is_shutdown():
         display_line_list(line_points, pub_line_list)

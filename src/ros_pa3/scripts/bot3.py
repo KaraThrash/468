@@ -19,9 +19,17 @@ while count < 35:
 # >>> s = np.random.normal(mu, sigma, 1000)
 # print(numpy.random.normal(.1, .1, 10))
 
-tag_positions[0] = Grid_centre_class(125,525,0)
-tag_positions[1] = Grid_centre_class(125,325,0)
-tag_positions[2] = Grid_centre_class(125,125,0)
-tag_positions[3] = Grid_centre_class(425,125,0)
-tag_positions[4] = Grid_centre_class(425,325,0)
-tag_positions[5] = Grid_centre_class(425,525,0)
+# tag_positions[0] = Grid_centre_class(125,525,0)
+# tag_positions[1] = Grid_centre_class(125,325,0)
+# tag_positions[2] = Grid_centre_class(125,125,0)
+# tag_positions[3] = Grid_centre_class(425,125,0)
+# tag_positions[4] = Grid_centre_class(425,325,0)
+# tag_positions[5] = Grid_centre_class(425,525,0)
+
+# as squares
+tag_positions[0] = Grid_centre_class(6.25,26.25,0)
+tag_positions[1] = Grid_centre_class(6.25,16.25,0)
+tag_positions[2] = Grid_centre_class(6.25,6.25,0)
+tag_positions[3] = Grid_centre_class(21.25,6.25,0)
+tag_positions[4] = Grid_centre_class(21.25,16.25,0)
+tag_positions[5] = Grid_centre_class(21.25,26.25,0)

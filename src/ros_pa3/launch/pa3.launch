@@ -1,7 +1,7 @@
 <launch>
-  <!-- <node type="stageros" name="stage_sim" pkg="stage_ros" args="-d $(find ros_pa3)/world/playground.world" /> -->
 
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find ros_pa3)/include/config/config.rviz" />
   <!-- <node type="finalbotpa2.py" name="my_toaster" pkg="ros_pa3"/> -->
-<node type="markers_example.py" name="rviz_pub_example" pkg="ros_pa3"/>
+<!-- <node type="finalbot3.py" name="toaster3" pkg="ros_pa3" args="-d $(find ros_pa3)/scripts/finalbot3.py"/> -->
+<node type="finalbot3.py" name="my_toaster" pkg="ros_pa3"/>
 </launch>
